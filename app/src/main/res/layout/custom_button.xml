@@ -1,0 +1,7 @@
+<com.google.android.material.button.MaterialButton style="@style/Widget.EStore.Button.Primary"
+    android:id="@+id/btn_custom"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/button_height"
+    android:text="@string/btn_add_to_cart"
+    android:layout_margin="@dimen/padding_medium"
+    xmlns:android="http://schemas.android.com/apk/res/android" />
