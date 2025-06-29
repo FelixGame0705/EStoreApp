@@ -1,71 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    android:layout_margin="8dp"
+    android:elevation="4dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <!-- Product Image -->
         <ImageView
-            android:id="@+id/imageProduct"
+            android:id="@+id/imgProduct"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_marginBottom="8dp"
-            android:background="@color/image_background"
             android:scaleType="centerCrop"
-            tools:src="@tools:sample/avatars" />
+            android:src="@drawable/ic_launcher_foreground" />
 
-        <!-- Product Title -->
         <TextView
-            android:id="@+id/textTitle"
-            android:layout_width="match_parent"
+            android:id="@+id/tvProductName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
+            android:text="Product Name"
             android:textStyle="bold"
-            tools:text="Sample Product Title" />
+            android:layout_marginTop="8dp" />
 
-        <!-- Product Category -->
         <TextView
-            android:id="@+id/textCategory"
-            android:layout_width="match_parent"
+            android:id="@+id/tvProductPrice"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/category_background"
-            android:gravity="center"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="2dp"
-            android:textColor="@color/colorPrimary"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            tools:text="Electronics" />
+            android:text="$0.00"
+            android:layout_marginTop="4dp" />
 
-        <!-- Product Price -->
-        <TextView
-            android:id="@+id/textPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textColor="@color/price_color"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="$19.99" />
-
+        <ImageView
+            android:id="@+id/imgAdd"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_empty_cart"
+            android:layout_gravity="end" />
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>

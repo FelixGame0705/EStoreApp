@@ -3,6 +3,7 @@ package com.group5.estoreapp.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Product {
+    // Trường cho dữ liệu API
     @SerializedName("id")
     private int id;
 
@@ -13,7 +14,7 @@ public class Product {
     private double price;
 
     @SerializedName("image")
-    private String image;
+    private String image; // URL từ API
 
     @SerializedName("description")
     private String description;
@@ -21,9 +22,17 @@ public class Product {
     @SerializedName("category")
     private String category;
 
-    // Constructor
-    public Product() {}
+    // Trường cho dữ liệu local
+    private int imageResourceId;
 
+    // Constructor cho dữ liệu local (mock)
+    public Product(String title, double price, int imageResourceId) {
+        this.title = title;
+        this.price = price;
+        this.imageResourceId = imageResourceId;
+    }
+
+    // Constructor cho dữ liệu từ API
     public Product(int id, String title, double price, String image, String description, String category) {
         this.id = id;
         this.title = title;
@@ -33,7 +42,7 @@ public class Product {
         this.category = category;
     }
 
-    // Getters
+    // Getters cho API
     public int getId() {
         return id;
     }
@@ -58,7 +67,12 @@ public class Product {
         return category;
     }
 
-    // Setters
+    // Getter cho ảnh local
+    public int getImageResourceId() {
+        return imageResourceId;
+    }
+
+    // Setters (nếu cần)
     public void setId(int id) {
         this.id = id;
     }
@@ -83,6 +97,10 @@ public class Product {
         this.category = category;
     }
 
+    public void setImageResourceId(int imageResourceId) {
+        this.imageResourceId = imageResourceId;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -92,6 +110,7 @@ public class Product {
                 ", image='" + image + '\'' +
                 ", description='" + description + '\'' +
                 ", category='" + category + '\'' +
+                ", imageResourceId=" + imageResourceId +
                 '}';
     }
 }

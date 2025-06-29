@@ -1,120 +1,135 @@
 package com.group5.estoreapp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-import androidx.activity.EdgeToEdge;
+import android.widget.SearchView;
+import android.widget.ViewFlipper;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.group5.estoreapp.adapter.ProductAdapter;
-import com.group5.estoreapp.api.ProductApiService;
 import com.group5.estoreapp.model.Product;
+
 import java.util.ArrayList;
 import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements ProductAdapter.OnProductClickListener {
-    private static final String TAG = "MainActivity";
+public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerViewProducts;
-    private ProductAdapter productAdapter;
-    private ProgressBar progressBar;
+    private Toolbar toolbarhome;
+    private ViewFlipper viewFlipper;
+    private RecyclerView recyclerView;
+    private BottomNavigationView bottomNavigationView;
+    private FloatingActionButton fabChat;
+    private SearchView searchView;
     private List<Product> productList;
+    private ProductAdapter productAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
         initViews();
-        setupRecyclerView();
+        setupToolbar();
+        setupViewFlipper();
         loadProducts();
+        setupBottomNavigation();
     }
 
     private void initViews() {
-        recyclerViewProducts = findViewById(R.id.recyclerViewProducts);
-        progressBar = findViewById(R.id.progressBar);
-        productList = new ArrayList<>();
-    }
+        toolbarhome = findViewById(R.id.toolbarhome);
+        viewFlipper = findViewById(R.id.viewFlipper);
+        recyclerView = findViewById(R.id.recyclerView);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        fabChat = findViewById(R.id.fab_chat);
+        searchView = findViewById(R.id.searchView);
 
-    private void setupRecyclerView() {
-        productAdapter = new ProductAdapter(this, productList);
-        productAdapter.setOnProductClickListener(this);
-
-        // Setup GridLayoutManager with 2 columns
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        recyclerViewProducts.setLayoutManager(layoutManager);
-        recyclerViewProducts.setAdapter(productAdapter);
-    }
-
-    private void loadProducts() {
-        showLoading(true);
-
-        ProductApiService.getInstance().getProducts().enqueue(new Callback<List<Product>>() {
+        // Set up FAB click listener
+        fabChat.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
-                showLoading(false);
-
-                if (response.isSuccessful() && response.body() != null) {
-                    productList.clear();
-                    productList.addAll(response.body());
-                    productAdapter.updateProducts(productList);
-
-                    Log.d(TAG, "Loaded " + productList.size() + " products successfully");
-                } else {
-                    showError("Failed to load products: " + response.message());
-                    Log.e(TAG, "API Error: " + response.code() + " - " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Product>> call, Throwable t) {
-                showLoading(false);
-                showError("Network error: " + t.getMessage());
-                Log.e(TAG, "Network Error: ", t);
+            public void onClick(View v) {
+                recyclerView.setVisibility(View.GONE);
+                // TODO: Thêm chức năng Chat ở đây
+                bottomNavigationView.setSelectedItemId(R.id.nav_chat); // Highlight Chat
             }
         });
     }
 
-    private void showLoading(boolean show) {
-        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-        recyclerViewProducts.setVisibility(show ? View.GONE : View.VISIBLE);
+    private void setupToolbar() {
+        setSupportActionBar(toolbarhome);
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    // Handle search submission (e.g., filter products)
+                    // TODO: Implement search logic
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    // Handle search text changes (e.g., real-time filtering)
+                    // TODO: Implement search logic
+                    return false;
+                }
+            });
+        }
     }
 
-    private void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    private void setupViewFlipper() {
+        viewFlipper.setAutoStart(true);
+        viewFlipper.setFlipInterval(3000);
+        viewFlipper.startFlipping();
     }
 
-    @Override
-    public void onProductClick(Product product) {
-        // Handle product click - mở ProductDetailActivity
-        Toast.makeText(this, "Opening: " + product.getTitle(), Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Product clicked: " + product.toString());
+    private void loadProducts() {
+        productList = new ArrayList<>();
+        productList.add(new Product("Banana", 4.99, R.drawable.ic_launcher_foreground));
+        productList.add(new Product("Apple", 5.99, R.drawable.ic_launcher_foreground));
+        productList.add(new Product("Orange", 3.99, R.drawable.ic_launcher_foreground));
+        productList.add(new Product("Grapes", 6.49, R.drawable.ic_launcher_foreground));
 
-        // Start ProductDetailActivity
-        Intent intent = new Intent(this, ProductDetailActivity.class);
-        intent.putExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, product.getId());
-        startActivity(intent);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        productAdapter = new ProductAdapter(productList);
+        recyclerView.setAdapter(productAdapter);
     }
 
-    // Method để refresh data
-    public void refreshProducts() {
-        loadProducts();
+    private void setupBottomNavigation() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.nav_home) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    return true;
+                }  else if (itemId == R.id.nav_chat) {
+                    recyclerView.setVisibility(View.GONE);
+                    // TODO: Thêm chức năng Chat ở đây
+                    return true;
+                } else if (itemId == R.id.nav_cart) {
+                    recyclerView.setVisibility(View.GONE);
+                    // TODO: Thêm chức năng Giỏ hàng ở đây
+                    return true;
+                } else if (itemId == R.id.nav_notifications) {
+                    recyclerView.setVisibility(View.GONE);
+                    // TODO: Thêm chức năng Thông báo ở đây
+                    return true;
+                } else if (itemId == R.id.nav_profile) {
+                    recyclerView.setVisibility(View.GONE);
+                    // TODO: Thêm chức năng Tài khoản ở đây
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
     }
 }

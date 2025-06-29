@@ -1,80 +1,96 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F5F5F5"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <!-- Header -->
+    <!-- Toolbar with SearchView -->
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="E-Store"
-        app:titleTextColor="@android:color/white" />
-
-    <!-- Progress Bar -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
+        android:id="@+id/toolbarhome"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        android:background="#FFC107"
+        app:title="Trang chính"
+        app:titleTextColor="@android:color/white">
 
-    <!-- RecyclerView for Products -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewProducts"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:clipToPadding="false"
-        android:padding="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:itemCount="6"
-        tools:listitem="@layout/item_product" />
+    </androidx.appcompat.widget.Toolbar>
 
-    <!-- Empty State (Optional) -->
-    <LinearLayout
-        android:id="@+id/layoutEmptyState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+    <!-- Slider -->
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:layout_below="@id/toolbarhome"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:autoStart="true"
+        android:flipInterval="3000">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_empty_cart"
-            android:alpha="0.5" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/banner1" /> <!-- Replace with festive banner -->
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/banner2"
+            android:scaleType="centerCrop" /> <!-- Replace with festive banner -->
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/banner3"
+            android:scaleType="centerCrop" /> <!-- Replace with festive banner -->
+    </ViewFlipper>
+
+    <!-- Content (Fragment Container) -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_below="@id/viewFlipper"
+        android:layout_above="@id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <TextView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Sản phẩm mới nhất"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="No products available"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="16sp" />
+            android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"/>
+    </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_nav_menu" />
+
+    <!-- Chat button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_chat"
+        app:fabSize="normal"
+        app:backgroundTint="#FFC107" />
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:iconifiedByDefault="false"
+        android:queryHint="Tìm kiếm..."
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white" />
+</RelativeLayout>
