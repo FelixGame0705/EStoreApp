@@ -4,113 +4,82 @@ import com.google.gson.annotations.SerializedName;
 
 public class Product {
     // Trường cho dữ liệu API
-    @SerializedName("id")
-    private int id;
+    @SerializedName("productID")
+    private int productID;
 
-    @SerializedName("title")
-    private String title;
+    @SerializedName("productName")
+    private String productName;
+
+    @SerializedName("briefDescription")
+    private String briefDescription;
+
+    @SerializedName("fullDescription")
+    private String fullDescription;
+
+    @SerializedName("technicalSpecifications")
+    private String technicalSpecifications;
+
 
     @SerializedName("price")
     private double price;
 
-    @SerializedName("image")
-    private String image; // URL từ API
+    @SerializedName("imageURL")
+    private String imageURL; // URL từ API
 
-    @SerializedName("description")
-    private String description;
+    @SerializedName("categoryID")
+    private int categoryID;
 
-    @SerializedName("category")
-    private String category;
-
-    // Trường cho dữ liệu local
-    private int imageResourceId;
+    @SerializedName("categoryName")
+    private String categoryName;
 
     // Constructor cho dữ liệu local (mock)
-    public Product(String title, double price, int imageResourceId) {
-        this.title = title;
-        this.price = price;
-        this.imageResourceId = imageResourceId;
+    public int getProductID() {
+        return productID;
     }
 
-    // Constructor cho dữ liệu từ API
-    public Product(int id, String title, double price, String image, String description, String category) {
-        this.id = id;
-        this.title = title;
-        this.price = price;
-        this.image = image;
-        this.description = description;
-        this.category = category;
+    public String getProductName() {
+        return productName;
     }
 
-    // Getters cho API
-    public int getId() {
-        return id;
+    public String getBriefDescription() {
+        return briefDescription;
     }
 
-    public String getTitle() {
-        return title;
+    public String getFullDescription() {
+        return fullDescription;
+    }
+
+    public String getTechnicalSpecifications() {
+        return technicalSpecifications;
     }
 
     public double getPrice() {
         return price;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public String getDescription() {
-        return description;
+    public int getCategoryID() {
+        return categoryID;
     }
 
-    public String getCategory() {
-        return category;
+    public String getCategoryName() {
+        return categoryName;
     }
-
-    // Getter cho ảnh local
-    public int getImageResourceId() {
-        return imageResourceId;
-    }
-
-    // Setters (nếu cần)
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public void setImageResourceId(int imageResourceId) {
-        this.imageResourceId = imageResourceId;
-    }
-
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
+                "productID=" + productID +
+                ", productName='" + productName + '\'' +
+                ", briefDescription='" + briefDescription + '\'' +
+                ", fullDescription='" + fullDescription + '\'' +
+                ", technicalSpecifications='" + technicalSpecifications + '\'' +
                 ", price=" + price +
-                ", image='" + image + '\'' +
-                ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
-                ", imageResourceId=" + imageResourceId +
+                ", imageURL='" + imageURL + '\'' +
+                ", categoryID=" + categoryID +
+                ", categoryName='" + categoryName + '\'' +
                 '}';
     }
 }
