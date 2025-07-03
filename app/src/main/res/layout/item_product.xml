@@ -49,7 +49,7 @@
             android:id="@+id/imgAdd"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_empty_cart"
+            android:src="@drawable/cart"
             android:layout_marginStart="8dp" />
     </LinearLayout>
     </LinearLayout>
