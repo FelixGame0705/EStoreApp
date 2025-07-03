@@ -45,20 +45,20 @@
         <ImageView
             android:id="@+id/imgDetail"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="300dp"
             android:layout_marginTop="16dp"
             android:scaleType="centerCrop" />
 
         <!-- Tên, giá, mô tả, thông số + nút thêm -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="401dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <!-- Thông tin chi tiết -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="320dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
@@ -97,17 +97,19 @@
                     android:layout_marginTop="8dp"
                     android:text="Thông số kỹ thuật"
                     android:textSize="18sp" />
+
             </LinearLayout>
 
             <!-- Nút thêm giỏ hàng -->
-            <ImageView
-                android:id="@+id/imgAdd"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/ic_empty_cart" />
+
         </LinearLayout>
+        <ImageView
+            android:id="@+id/imgAdd"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/cart" />
 
     </LinearLayout>
 </LinearLayout>
