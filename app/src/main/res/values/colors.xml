@@ -1,5 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="primary">#4CAF50</color> <!-- Màu xanh lá cây -->
+    <color name="primary_dark">#388E3C</color>
+    <color name="accent">#FF9800</color>
+    <color name="background">#FFFFFF</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="button_text">#FFFFFF</color>
+    <color name="gray_light">#F5F5F5</color>
+    <color name="border">#E0E0E0</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
@@ -24,3 +34,4 @@
     <color name="red">#FF0000</color>
 
 </resources>
+
