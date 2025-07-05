@@ -1,4 +1,4 @@
-package com.group5.estoreapp;
+package com.group5.estoreapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.group5.estoreapp.R;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,6 +35,9 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> {
             // Xử lý đăng nhập
             Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         });
 
         tvRegister.setOnClickListener(v -> {

@@ -2,6 +2,7 @@ package com.group5.estoreapp.model;
 
 public class CartItem {
     private int cartItemID;
+    private int userID;
     private int cartID;
     private int productID;
     private int quantity;
@@ -10,6 +11,8 @@ public class CartItem {
     private String productImageURL;
 
     // Getters
+    public int getUserID() { return userID; }
+    public void setUserID(int userID) { this.userID = userID; }
     public int getCartItemID() {
         return cartItemID;
     }
