@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,18 +15,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.group5.estoreapp.R;
 import com.group5.estoreapp.activities.ProductDetailActivity;
+import com.group5.estoreapp.model.CartItem;
 import com.group5.estoreapp.model.Product;
+import com.group5.estoreapp.services.CartService;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     private List<Product> productList;
     private Context context;
+    private final int userId = 1; // TODO: Lấy từ session hoặc SharedPreferences
 
     public ProductAdapter(Context context, List<Product> productList) {
         this.context = context;
         this.productList = productList;
     }
+
     public void setProductList(List<Product> newList) {
         this.productList = newList;
         notifyDataSetChanged();
@@ -51,13 +60,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvPrice;
-        ImageView imgProduct;
+        ImageView imgProduct, imgAdd;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvProductName);
             tvPrice = itemView.findViewById(R.id.tvProductPrice);
             imgProduct = itemView.findViewById(R.id.imgProduct);
+            imgAdd = itemView.findViewById(R.id.imgAdd); // ⬅️ gắn icon giỏ hàng
         }
 
         public void bind(Product product) {
@@ -69,6 +79,28 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 Intent intent = new Intent(context, ProductDetailActivity.class);
                 intent.putExtra("productId", product.getProductID());
                 context.startActivity(intent);
+            });
+
+            // Bắt sự kiện click "Add to Cart"
+            imgAdd.setOnClickListener(v -> {
+                CartItem item = new CartItem();
+                item.setUserID(userId);
+                item.setProductID(product.getProductID());
+                item.setQuantity(1);
+
+                CartService cartService = new CartService();
+                cartService.addProductToCart(userId, product.getProductID(), 1, new CartService.AddToCartCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Toast.makeText(context, "Lỗi: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
             });
         }
     }

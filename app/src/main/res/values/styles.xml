@@ -1,5 +1,7 @@
 <resources>
-
+    <style name="Text">
+        <!-- Base text, có thể rỗng -->
+    </style>
     <!-- Theme của App -->
     <style name="Theme.EStore" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>

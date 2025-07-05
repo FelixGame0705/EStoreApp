@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:padding="12dp">
 
@@ -17,41 +17,95 @@
             android:id="@+id/imgProduct"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:scaleType="centerCrop"
-            android:layout_marginEnd="12dp" />
+            android:layout_marginEnd="12dp"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvProductName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tên sản phẩm"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:maxLines="1"
-                android:ellipsize="end" />
+            <LinearLayout
+                android:layout_width="294dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvProductPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100000₫"
-                android:textColor="#FF5722"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp"/>
+                <TextView
+                    android:id="@+id/tvProductName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Tên sản phẩm"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvProductQuantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Số lượng: 1"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp"/>
+                <TextView
+                    android:id="@+id/tvProductPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="100000₫"
+                    android:textColor="#FF5722"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvProductQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Số lượng: 1"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+
+                    <!-- Nút xóa (bên phải) -->
+                    <ImageButton
+                        android:id="@+id/deleteProduct"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentEnd="true"
+                        android:src="@drawable/bin"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Xóa sản phẩm"
+                        android:onClick="onDeleteClick" />
+
+                    <!-- Nhóm nút quantity (bên trái) -->
+                    <LinearLayout
+                        android:id="@+id/quantityControl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_alignParentStart="true">
+
+                        <ImageButton
+                            android:id="@+id/subtractQuantity"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/minus"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Giảm số lượng"
+                            android:onClick="onSubtractClick" />
+
+                        <ImageButton
+                            android:id="@+id/addQuantity"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/add"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Tăng số lượng"
+                            android:onClick="onAddClick" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

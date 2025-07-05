@@ -1,13 +1,16 @@
 package com.group5.estoreapp.api;
 
 import com.group5.estoreapp.model.Cart;
+import com.group5.estoreapp.model.CartItem;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public class CartApi {
@@ -18,6 +21,14 @@ public class CartApi {
     private interface API {
         @GET("Carts/user/{id}")
         Call<List<Cart>> getCartByUserId(@Path("id") int userId);
+
+        // ✅ POST Cart
+        @POST("CartItems")
+        Call<Void> addCartItem(@Body CartItem item);
+
+        @POST("Carts")
+        Call<Cart> createCart(@Body Cart cart);
+
     }
 
     private final API api;
@@ -38,5 +49,13 @@ public class CartApi {
 
     public Call<List<Cart>> getCartByUserId(int userId) {
         return api.getCartByUserId(userId);
+    }
+
+    public Call<Cart> createCart(Cart cart) {
+        return api.createCart(cart);
+    }
+
+    public Call<Void> addCartItem(CartItem item) {
+        return api.addCartItem(item);
     }
 }
