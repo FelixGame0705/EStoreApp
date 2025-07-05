@@ -3,95 +3,83 @@ package com.group5.estoreapp.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Product {
-    @SerializedName("id")
-    private int id;
+    // Trường cho dữ liệu API
+    @SerializedName("productID")
+    private int productID;
 
-    @SerializedName("title")
-    private String title;
+    @SerializedName("productName")
+    private String productName;
+
+    @SerializedName("briefDescription")
+    private String briefDescription;
+
+    @SerializedName("fullDescription")
+    private String fullDescription;
+
+    @SerializedName("technicalSpecifications")
+    private String technicalSpecifications;
+
 
     @SerializedName("price")
     private double price;
 
-    @SerializedName("image")
-    private String image;
+    @SerializedName("imageURL")
+    private String imageURL; // URL từ API
 
-    @SerializedName("description")
-    private String description;
+    @SerializedName("categoryID")
+    private int categoryID;
 
-    @SerializedName("category")
-    private String category;
+    @SerializedName("categoryName")
+    private String categoryName;
 
-    // Constructor
-    public Product() {}
-
-    public Product(int id, String title, double price, String image, String description, String category) {
-        this.id = id;
-        this.title = title;
-        this.price = price;
-        this.image = image;
-        this.description = description;
-        this.category = category;
+    // Constructor cho dữ liệu local (mock)
+    public int getProductID() {
+        return productID;
     }
 
-    // Getters
-    public int getId() {
-        return id;
+    public String getProductName() {
+        return productName;
     }
 
-    public String getTitle() {
-        return title;
+    public String getBriefDescription() {
+        return briefDescription;
+    }
+
+    public String getFullDescription() {
+        return fullDescription;
+    }
+
+    public String getTechnicalSpecifications() {
+        return technicalSpecifications;
     }
 
     public double getPrice() {
         return price;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public String getDescription() {
-        return description;
+    public int getCategoryID() {
+        return categoryID;
     }
 
-    public String getCategory() {
-        return category;
+    public String getCategoryName() {
+        return categoryName;
     }
-
-    // Setters
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
+                "productID=" + productID +
+                ", productName='" + productName + '\'' +
+                ", briefDescription='" + briefDescription + '\'' +
+                ", fullDescription='" + fullDescription + '\'' +
+                ", technicalSpecifications='" + technicalSpecifications + '\'' +
                 ", price=" + price +
-                ", image='" + image + '\'' +
-                ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
+                ", imageURL='" + imageURL + '\'' +
+                ", categoryID=" + categoryID +
+                ", categoryName='" + categoryName + '\'' +
                 '}';
     }
 }

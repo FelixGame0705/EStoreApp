@@ -34,6 +34,7 @@ android {
 dependencies {
     // Glide for image loading
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.car.ui.lib)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     // Gson for JSON parsing

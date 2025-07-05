@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/sort_name"
+        android:title="Sắp xếp theo Tên"
+        android:textColor="@color/black"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/sort_price"
+        android:textColor="@color/black"
+        android:title="Sắp xếp theo Giá"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/sort_category"
+        android:title="Sắp xếp theo Danh mục"
+        android:textColor="@color/black"
+        app:showAsAction="never"/>
+</menu>
