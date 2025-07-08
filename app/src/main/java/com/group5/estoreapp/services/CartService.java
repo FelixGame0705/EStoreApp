@@ -4,7 +4,10 @@ import com.group5.estoreapp.api.CartApi;
 import com.group5.estoreapp.model.Cart;
 import com.group5.estoreapp.model.CartItem;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,6 +19,14 @@ public class CartService {
 
     public interface CartCallback {
         void onCartsLoaded(List<Cart> carts);
+        void onError(Throwable t);
+    }
+    public interface ActiveCartsCallback {
+        void onCartsLoaded(List<Cart> activeCarts);
+        void onError(Throwable t);
+    }
+    public interface SingleCartCallback {
+        void onCartLoaded(Cart cart);
         void onError(Throwable t);
     }
 
@@ -65,16 +76,23 @@ public class CartService {
         CartApi.getInstance().getCartByUserId(userId).enqueue(new Callback<List<Cart>>() {
             @Override
             public void onResponse(Call<List<Cart>> call, Response<List<Cart>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     List<Cart> carts = response.body();
-                    if (carts != null && !carts.isEmpty()) {
-                        // Đã có cart → thêm CartItem
-                        postCartItem(carts.get(0).getCartID(), userId, productId, quantity, callback);
+                    Cart activeCart = null;
+                    for (Cart cart : carts) {
+                        if ("active".equalsIgnoreCase(cart.getStatus())) {
+                            activeCart = cart;
+                            break;
+                        }
+                    }
+
+                    if (activeCart != null) {
+                        postCartItem(activeCart.getCartID(), userId, productId, quantity, callback);
                     } else {
-                        // Chưa có cart → tạo mới
+                        // ❗ Nếu chưa có cart active → tạo mới với status = "active"
                         Cart newCart = new Cart();
                         newCart.setUserID(userId);
-                        newCart.setStatus("Pending");
+                        newCart.setStatus("active");
                         newCart.setTotalPrice(0);
 
                         CartApi.getInstance().createCart(newCart).enqueue(new Callback<Cart>() {
@@ -106,6 +124,7 @@ public class CartService {
         });
     }
 
+
     // Gửi POST CartItem
     private void postCartItem(int cartId, int userId, int productId, int quantity, AddToCartCallback callback) {
         CartItem item = new CartItem();
@@ -129,5 +148,87 @@ public class CartService {
                 callback.onError(t);
             }
         });
+
     }
+    public void getActiveCart(int userId, SingleCartCallback callback) {
+        CartApi.getInstance().getCartByUserId(userId).enqueue(new Callback<List<Cart>>() {
+            @Override
+            public void onResponse(Call<List<Cart>> call, Response<List<Cart>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Cart cart : response.body()) {
+                        if ("active".equalsIgnoreCase(cart.getStatus())) {
+                            callback.onCartLoaded(cart);
+                            return;
+                        }
+                    }
+                    callback.onError(new Exception("Không có giỏ hàng active"));
+                } else {
+                    callback.onError(new Exception("Không thể lấy danh sách giỏ hàng"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Cart>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+    // ✅ Lấy danh sách CartItem từ cart có status = "active"
+    public void getActiveCartItems(int userId, CartItemsCallback callback) {
+        getActiveCart(userId, new SingleCartCallback() {
+            @Override
+            public void onCartLoaded(Cart cart) {
+                List<CartItem> cartItems = cart.getCartItems();
+
+                // ✅ Duy nhất theo productId
+                Set<Integer> seenProductIds = new HashSet<>();
+                for (CartItem item : cartItems) {
+                    seenProductIds.add(item.getProductID());
+                }
+
+                // Truyền số lượng product duy nhất về
+                List<CartItem> uniqueItems = new ArrayList<>();
+                for (Integer productId : seenProductIds) {
+                    for (CartItem item : cartItems) {
+                        if (item.getProductID() == productId) {
+                            uniqueItems.add(item);
+                            break;
+                        }
+                    }
+                }
+
+                callback.onCartItemsLoaded(uniqueItems);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+    public void addOrUpdateCartItem(int cartId, int productId, int quantity, AddToCartCallback callback) {
+        Call<CartItem> call =CartApi.getInstance().addOrUpdate(cartId, productId, quantity);
+        call.enqueue(new Callback<CartItem>() {
+            @Override
+            public void onResponse(Call<CartItem> call, Response<CartItem> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess();
+                } else {
+                    callback.onError(new Exception("Thất bại: " + response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CartItem> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+    public void deleteCartItem(int cartItemId, Callback<Void> callback) {
+        CartApi.getInstance().deleteCartItem(cartItemId).enqueue(callback);
+    }
+
+
+
+
 }

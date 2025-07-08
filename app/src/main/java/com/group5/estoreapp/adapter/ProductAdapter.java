@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.group5.estoreapp.R;
+import com.group5.estoreapp.activities.MainActivity;
 import com.group5.estoreapp.activities.ProductDetailActivity;
+import com.group5.estoreapp.helpers.SessionManager;
 import com.group5.estoreapp.model.CartItem;
 import com.group5.estoreapp.model.Product;
 import com.group5.estoreapp.services.CartService;
@@ -28,7 +30,6 @@ import retrofit2.Response;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     private List<Product> productList;
     private Context context;
-    private final int userId = 1; // TODO: Lấy từ session hoặc SharedPreferences
 
     public ProductAdapter(Context context, List<Product> productList) {
         this.context = context;
@@ -83,10 +84,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
             // Bắt sự kiện click "Add to Cart"
             imgAdd.setOnClickListener(v -> {
-                CartItem item = new CartItem();
-                item.setUserID(userId);
-                item.setProductID(product.getProductID());
-                item.setQuantity(1);
+                int userId = SessionManager.getUserId(context);
+                if (userId == -1) {
+                    Toast.makeText(context, "Bạn chưa đăng nhập!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 CartService cartService = new CartService();
                 cartService.addProductToCart(userId, product.getProductID(), 1, new CartService.AddToCartCallback() {
@@ -95,12 +97,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                         Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
                     }
 
+
                     @Override
                     public void onError(Throwable t) {
                         Toast.makeText(context, "Lỗi: " + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-
             });
         }
     }
