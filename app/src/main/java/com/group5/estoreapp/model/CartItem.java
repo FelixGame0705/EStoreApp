@@ -1,6 +1,8 @@
 package com.group5.estoreapp.model;
 
-public class CartItem {
+import java.io.Serializable;
+
+public class CartItem  implements Serializable {
     private int cartItemID;
     private int userID;
     private int cartID;

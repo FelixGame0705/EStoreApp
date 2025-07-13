@@ -1,5 +1,7 @@
 package com.group5.estoreapp.services;
 
+import android.util.Log;
+
 import com.group5.estoreapp.api.CartApi;
 import com.group5.estoreapp.model.Cart;
 import com.group5.estoreapp.model.CartItem;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -156,11 +159,15 @@ public class CartService {
             public void onResponse(Call<List<Cart>> call, Response<List<Cart>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     for (Cart cart : response.body()) {
-                        if ("active".equalsIgnoreCase(cart.getStatus())) {
+                        if (cart.getStatus() != null && cart.getStatus().trim().equalsIgnoreCase("active"))
+                        {
                             callback.onCartLoaded(cart);
                             return;
                         }
+                        Log.d("CartStatusDebug", "Cart ID: " + cart.getCartID() + ", Status: [" + cart.getStatus() + "]");
+
                     }
+
                     callback.onError(new Exception("Không có giỏ hàng active"));
                 } else {
                     callback.onError(new Exception("Không thể lấy danh sách giỏ hàng"));

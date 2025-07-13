@@ -11,6 +11,7 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.group5.estoreapp.R;
 import com.group5.estoreapp.fragments.CartFragment;
+import com.group5.estoreapp.fragments.ChatFragment;
 import com.group5.estoreapp.fragments.ProductFragment;
 import com.group5.estoreapp.model.CartItem;
 import com.group5.estoreapp.services.CartService;
@@ -51,6 +52,12 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
                 return true;
             } else if (id == R.id.nav_cart) {
                 loadFragment(new CartFragment());
+                return true;
+            } else if (id == R.id.nav_chat) {
+                loadFragment(new ChatFragment());
+                return true;
+            } else if (id == R.id.nav_notifications) {
+//                loadFragment(new ChatFragment());
                 return true;
             } else if (id == R.id.nav_profile) {
                 // loadFragment(new ProfileFragment());
