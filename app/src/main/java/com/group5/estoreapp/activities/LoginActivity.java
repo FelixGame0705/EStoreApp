@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,8 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.auth0.android.jwt.JWT;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.JsonObject;
+import com.group5.estoreapp.activities.MainActivity;
 import com.group5.estoreapp.R;
+import com.group5.estoreapp.model.User;
 import com.group5.estoreapp.services.UserService;
+import com.group5.estoreapp.sqlite.UserDbHelper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -24,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     MaterialButton btnLogin;
     TextView tvRegister;
     UserService userService = new UserService();
+    UserDbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +40,16 @@ public class LoginActivity extends AppCompatActivity {
         cbRemember = findViewById(R.id.cbRemember);
         btnLogin = findViewById(R.id.btnLogin);
         tvRegister = findViewById(R.id.tvRegister);
+        dbHelper = new UserDbHelper(this);
 
         btnLogin.setText("Login");
 
         btnLogin.setOnClickListener(v -> {
+            hideKeyboard();
+
             String username = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
 
-            // Kiểm tra nhập liệu
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập đầy đủ tài khoản và mật khẩu", Toast.LENGTH_SHORT).show();
                 return;
@@ -56,17 +63,14 @@ public class LoginActivity extends AppCompatActivity {
             userService.login(username, password, new UserService.LoginCallback() {
                 public void onSuccess(JsonObject response) {
                     dialog.dismiss();
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
 
-                    // ✅ Lấy accessToken từ token object
                     JsonObject tokenObj = response.getAsJsonObject("token");
                     String accessToken = tokenObj.get("accessToken").getAsString();
                     String role = tokenObj.get("role").getAsString();
 
-                    // ✅ Giải mã JWT để lấy userId
                     int userId = extractUserIdFromToken(accessToken);
 
-                    // Lưu vào SharedPreferences
+                    // Lưu token vào SharedPreferences
                     SharedPreferences pref = getSharedPreferences("auth", MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("accessToken", accessToken);
@@ -74,18 +78,30 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("role", role);
 
                     if (cbRemember.isChecked()) {
-                        editor.putString("username", etEmail.getText().toString().trim());
-                        editor.putString("password", etPassword.getText().toString().trim());
+                        editor.putString("username", username);
+                        editor.putString("password", password);
                     }
 
                     editor.apply();
 
-                    // Chuyển qua MainActivity
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
+                    // ✅ Lấy user chi tiết từ API rồi lưu vào SQLite
+                    userService.getUserByUsername(username, new UserService.UserCallback() {
+                        @Override
+                        public void onSuccess(User user) {
+                            dbHelper.clearUser();
+                            dbHelper.insertUser(user);
+
+                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            Toast.makeText(LoginActivity.this, "Không lấy được thông tin người dùng", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-
-
 
                 @Override
                 public void onError(Throwable t) {
@@ -96,8 +112,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         tvRegister.setOnClickListener(v -> {
-            Intent intent = new Intent(this, RegisterActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, RegisterActivity.class));
         });
     }
 
@@ -108,8 +123,14 @@ public class LoginActivity extends AppCompatActivity {
             return Integer.parseInt(userIdStr);
         } catch (Exception e) {
             e.printStackTrace();
-            return -1; // fallback nếu lỗi
+            return -1;
         }
     }
 
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (getCurrentFocus() != null) {
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
 }
