@@ -20,7 +20,7 @@ public class CartApi {
     private static CartApi instance;
 
     // Interface Retrofit
-    private interface API {
+    interface API {
         @GET("Carts/user/{id}")
         Call<List<Cart>> getCartByUserId(@Path("id") int userId);
 
