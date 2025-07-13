@@ -96,7 +96,7 @@ public class CartService {
                         Cart newCart = new Cart();
                         newCart.setUserID(userId);
                         newCart.setStatus("active");
-                        newCart.setTotalPrice(0);
+                        newCart.setTotalPrice(0.0);
 
                         CartApi.getInstance().createCart(newCart).enqueue(new Callback<Cart>() {
                             @Override
