@@ -79,7 +79,7 @@ public class CartFragment extends Fragment {
             if (cartId != 0 && cartAdapter != null) {
                 List<CartItem> cartItems = cartAdapter.getCartItems(); // 🟢 THÊM getter
                 Intent intent = new Intent(getContext(), OrderDetailActivity.class);
-                intent.putExtra("orderId", cartId);
+                intent.putExtra("cartId", cartId);
                 intent.putExtra("cartItems", new ArrayList<>(cartItems)); // Serializable
                 startActivity(intent);
             } else {
