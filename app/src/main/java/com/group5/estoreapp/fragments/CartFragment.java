@@ -1,6 +1,7 @@
 package com.group5.estoreapp.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.group5.estoreapp.R;
+import com.group5.estoreapp.activities.OrderDetailActivity;
 import com.group5.estoreapp.adapter.CartAdapter;
 import com.group5.estoreapp.model.Cart;
 import com.group5.estoreapp.model.CartItem;
@@ -25,6 +27,7 @@ import com.group5.estoreapp.model.OrderRequest;
 import com.group5.estoreapp.services.CartService;
 import com.group5.estoreapp.services.OrderService;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -73,30 +76,17 @@ public class CartFragment extends Fragment {
         loadCartItems();
 
         btnOrder.setOnClickListener(v -> {
-            if (cartId != 0) {
-                OrderRequest orderRequest = new OrderRequest(
-                        cartId,
-                        userId,
-                        "COD",
-                        "123 Nguyễn Văn A"
-                );
-
-                orderService.createOrder(orderRequest, new OrderService.CreateOrderCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(getContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
-                        loadCartItems(); // cập nhật lại sau khi đặt hàng
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        Toast.makeText(getContext(), "Lỗi đặt hàng: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+            if (cartId != 0 && cartAdapter != null) {
+                List<CartItem> cartItems = cartAdapter.getCartItems(); // 🟢 THÊM getter
+                Intent intent = new Intent(getContext(), OrderDetailActivity.class);
+                intent.putExtra("orderId", cartId);
+                intent.putExtra("cartItems", new ArrayList<>(cartItems)); // Serializable
+                startActivity(intent);
             } else {
                 Toast.makeText(getContext(), "Không tìm thấy giỏ hàng hợp lệ", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         return view;
     }

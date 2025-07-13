@@ -1,12 +1,14 @@
 package com.group5.estoreapp.model;
 
-public class CartItem {
+import java.io.Serializable;
+
+public class CartItem  implements Serializable {
     private int cartItemID;
     private int userID;
     private int cartID;
     private int productID;
     private int quantity;
-    private int price;
+    private double price;
     private String productName;
     private String productImageURL;
 
@@ -29,7 +31,7 @@ public class CartItem {
         return quantity;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 

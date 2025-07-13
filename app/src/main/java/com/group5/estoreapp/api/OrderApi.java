@@ -2,6 +2,7 @@ package com.group5.estoreapp.api;
 
 import com.group5.estoreapp.model.Order;
 import com.group5.estoreapp.model.OrderRequest;
+import com.group5.estoreapp.model.OrderResponse;
 
 import java.util.List;
 
@@ -22,7 +23,11 @@ public class OrderApi {
         Call<List<Order>> getOrdersByUserId(@Path("userId") int userId);
 
         @POST("Orders")
-        Call<Void> createOrder(@Body OrderRequest orderRequest);
+        Call<OrderResponse> createOrder(@Body OrderRequest orderRequest);
+
+//        @POST("Orders/{id}/billing")
+//        Call<Void> submitBilling(@Path("id") int orderId, @Body BillingInfo billingInfo);
+
     }
 
     private final API api;
@@ -44,8 +49,12 @@ public class OrderApi {
         return api.getOrdersByUserId(userId);
     }
 
-    public Call<Void> createOrder(OrderRequest orderRequest) {
+    public Call<OrderResponse> createOrder(OrderRequest orderRequest) {
         return api.createOrder(orderRequest);
     }
+//    public Call<Void> submitBilling(int orderId, BillingInfo billingInfo) {
+//        return api.submitBilling(orderId, billingInfo);
+//    }
+
 }
 

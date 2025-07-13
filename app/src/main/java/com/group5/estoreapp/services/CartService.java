@@ -1,5 +1,7 @@
 package com.group5.estoreapp.services;
 
+import android.util.Log;
+
 import com.group5.estoreapp.api.CartApi;
 import com.group5.estoreapp.model.Cart;
 import com.group5.estoreapp.model.CartItem;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -93,7 +96,7 @@ public class CartService {
                         Cart newCart = new Cart();
                         newCart.setUserID(userId);
                         newCart.setStatus("active");
-                        newCart.setTotalPrice(0);
+                        newCart.setTotalPrice(0.0);
 
                         CartApi.getInstance().createCart(newCart).enqueue(new Callback<Cart>() {
                             @Override
@@ -155,12 +158,20 @@ public class CartService {
             @Override
             public void onResponse(Call<List<Cart>> call, Response<List<Cart>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    for (Cart cart : response.body()) {
-                        if ("active".equalsIgnoreCase(cart.getStatus())) {
+                    List<Cart> carts = response.body();
+                    // In ra toàn bộ JSON xem thử
+                    Log.d("CartService", "Full carts JSON: " + carts);
+
+                    for (Cart cart : carts) {
+                        String status = cart.getStatus();
+                        Log.d("CartService", "CartID=" + cart.getCartID() + " status=[" + status + "]");
+                        if (status != null && status.trim().equalsIgnoreCase("active")) {
                             callback.onCartLoaded(cart);
                             return;
                         }
                     }
+
+                    // Nếu loop hết mà không thấy cart active
                     callback.onError(new Exception("Không có giỏ hàng active"));
                 } else {
                     callback.onError(new Exception("Không thể lấy danh sách giỏ hàng"));
@@ -173,6 +184,7 @@ public class CartService {
             }
         });
     }
+
     // ✅ Lấy danh sách CartItem từ cart có status = "active"
     public void getActiveCartItems(int userId, CartItemsCallback callback) {
         getActiveCart(userId, new SingleCartCallback() {
