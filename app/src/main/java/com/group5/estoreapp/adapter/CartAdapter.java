@@ -155,7 +155,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             }
         });
     }
-//    public List<CartItem> getCartItems() {
-//        return cartItemList;
-//    }
+    public List<CartItem> getCartItems() {
+        return cartItemList;
+    }
 }

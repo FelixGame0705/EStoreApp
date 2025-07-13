@@ -75,17 +75,17 @@ public class CartFragment extends Fragment {
 
         loadCartItems();
 
-//        btnOrder.setOnClickListener(v -> {
-//            if (cartId != 0 && cartAdapter != null) {
-//                List<CartItem> cartItems = cartAdapter.getCartItems(); // 🟢 THÊM getter
-//                Intent intent = new Intent(getContext(), OrderDetailActivity.class);
-//                intent.putExtra("orderId", cartId);
-//                intent.putExtra("cartItems", new ArrayList<>(cartItems)); // Serializable
-//                startActivity(intent);
-//            } else {
-//                Toast.makeText(getContext(), "Không tìm thấy giỏ hàng hợp lệ", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        btnOrder.setOnClickListener(v -> {
+            if (cartId != 0 && cartAdapter != null) {
+                List<CartItem> cartItems = cartAdapter.getCartItems(); // 🟢 THÊM getter
+                Intent intent = new Intent(getContext(), OrderDetailActivity.class);
+                intent.putExtra("orderId", cartId);
+                intent.putExtra("cartItems", new ArrayList<>(cartItems)); // Serializable
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), "Không tìm thấy giỏ hàng hợp lệ", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         return view;
