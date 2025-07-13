@@ -62,13 +62,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvPrice;
         ImageView imgProduct, imgAdd;
+        ImageView backButton;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvProductName);
             tvPrice = itemView.findViewById(R.id.tvProductPrice);
             imgProduct = itemView.findViewById(R.id.imgProduct);
-            imgAdd = itemView.findViewById(R.id.imgAdd); // ⬅️ gắn icon giỏ hàng
+            imgAdd = itemView.findViewById(R.id.imgAdd);
+// ⬅️ gắn icon giỏ hàng
         }
 
         public void bind(Product product) {
@@ -78,9 +80,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, ProductDetailActivity.class);
-                intent.putExtra("productId", product.getProductID());
+                intent.putExtra("product", product); // truyền cả object
                 context.startActivity(intent);
             });
+
 
             // Bắt sự kiện click "Add to Cart"
             imgAdd.setOnClickListener(v -> {
