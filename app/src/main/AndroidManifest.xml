@@ -24,18 +24,18 @@
 
         <!-- ✅ MainActivity: Launcher -->
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity android:name=".activities.ProductDetailActivity" />
-        <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.OrderDetailActivity" />
+        <activity android:name=".activities.EditProfileActivity"/>
+        <activity android:name=".activities.MainActivity"/>
         <activity android:name=".activities.PaymentResultActivity"
             android:exported="true">
             <intent-filter>
@@ -58,10 +58,6 @@
         <activity
             android:name=".activities.MapActivity"
             android:exported="false" />
-
-        <!-- Các activity còn lại -->
-        <activity android:name=".activities.ProductDetailActivity" android:exported="false"/>
-        <activity android:name=".activities.RegisterActivity" android:exported="false"/>
 
     </application>
 </manifest>
