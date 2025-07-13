@@ -5,7 +5,7 @@ import java.util.List;
 public class Cart {
     private int cartID;
     private int userID;
-    private int totalPrice;
+    private double totalPrice;
     private String status;
     private String userName;
     private List<CartItem> cartItems;
@@ -32,7 +32,7 @@ public class Cart {
         this.userID = userID;
     }
 
-    public int getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 

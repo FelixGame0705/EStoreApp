@@ -158,16 +158,20 @@ public class CartService {
             @Override
             public void onResponse(Call<List<Cart>> call, Response<List<Cart>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    for (Cart cart : response.body()) {
-                        if (cart.getStatus() != null && cart.getStatus().trim().equalsIgnoreCase("active"))
-                        {
+                    List<Cart> carts = response.body();
+                    // In ra toàn bộ JSON xem thử
+                    Log.d("CartService", "Full carts JSON: " + carts);
+
+                    for (Cart cart : carts) {
+                        String status = cart.getStatus();
+                        Log.d("CartService", "CartID=" + cart.getCartID() + " status=[" + status + "]");
+                        if (status != null && status.trim().equalsIgnoreCase("active")) {
                             callback.onCartLoaded(cart);
                             return;
                         }
-                        Log.d("CartStatusDebug", "Cart ID: " + cart.getCartID() + ", Status: [" + cart.getStatus() + "]");
-
                     }
 
+                    // Nếu loop hết mà không thấy cart active
                     callback.onError(new Exception("Không có giỏ hàng active"));
                 } else {
                     callback.onError(new Exception("Không thể lấy danh sách giỏ hàng"));
@@ -180,6 +184,7 @@ public class CartService {
             }
         });
     }
+
     // ✅ Lấy danh sách CartItem từ cart có status = "active"
     public void getActiveCartItems(int userId, CartItemsCallback callback) {
         getActiveCart(userId, new SingleCartCallback() {

@@ -8,7 +8,7 @@ public class CartItem  implements Serializable {
     private int cartID;
     private int productID;
     private int quantity;
-    private int price;
+    private double price;
     private String productName;
     private String productImageURL;
 
@@ -31,7 +31,7 @@ public class CartItem  implements Serializable {
         return quantity;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
