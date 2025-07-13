@@ -32,9 +32,21 @@ android {
 }
 
 dependencies {
+    implementation ("org.osmdroid:osmdroid-android:6.1.16")
+    implementation ("org.osmdroid:osmdroid-wms:6.1.16")
+    implementation ("org.osmdroid:osmdroid-mapsforge:6.1.16")
+
+// OpenRouteService - REST API client
+    implementation ("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+
+    implementation ("org.osmdroid:osmdroid-android:6.1.16")
+    implementation("com.android.volley:volley:1.2.1")
     // Glide for image loading
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.car.ui.lib)
+    implementation(libs.play.services.location)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     // Gson for JSON parsing
