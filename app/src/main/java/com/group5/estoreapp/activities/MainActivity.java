@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SearchView searchView = findViewById(R.id.searchView);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -60,6 +62,19 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
         String role = prefs.getString("role", "User");
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                sendSearchQueryToProductFragment(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                sendSearchQueryToProductFragment(newText);
+                return true;
+            }
+        });
 
         loadFragment(new ProductFragment());
 
@@ -136,6 +151,12 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private void sendSearchQueryToProductFragment(String query) {
+        Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (current instanceof ProductFragment) {
+            ((ProductFragment) current).onSearchQuery(query);
+        }
     }
 
     private void findNearestStore() {

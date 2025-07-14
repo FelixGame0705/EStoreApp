@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class Product  implements Serializable {
+
     // Trường cho dữ liệu API
     @SerializedName("productID")
     private int productID;
