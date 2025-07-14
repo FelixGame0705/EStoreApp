@@ -27,6 +27,7 @@ import com.group5.estoreapp.R;
 import com.group5.estoreapp.fragments.AdminChatFragment;
 import com.group5.estoreapp.fragments.CartFragment;
 import com.group5.estoreapp.fragments.ChatFragment;
+import com.group5.estoreapp.fragments.NotificationFragment;
 import com.group5.estoreapp.fragments.ProductFragment;
 import com.group5.estoreapp.fragments.UserDetailFragment;
 
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
         }
         else if (id == R.id.nav_notifications) {
 //                loadFragment(new ChatFragment());
+                loadFragment(new NotificationFragment());
                 return true;
             } else if (id == R.id.nav_profile) {
                 loadFragment(new UserDetailFragment());
