@@ -2,7 +2,9 @@ package com.group5.estoreapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product  implements Serializable {
     // Trường cho dữ liệu API
     @SerializedName("productID")
     private int productID;

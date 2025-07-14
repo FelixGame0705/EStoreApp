@@ -24,8 +24,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.group5.estoreapp.R;
+import com.group5.estoreapp.fragments.AdminChatFragment;
 import com.group5.estoreapp.fragments.CartFragment;
+import com.group5.estoreapp.fragments.ChatFragment;
 import com.group5.estoreapp.fragments.ProductFragment;
+import com.group5.estoreapp.fragments.UserDetailFragment;
 
 import org.json.JSONObject;
 
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
         SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
         userId = prefs.getInt("userId", -1);
         updateCartBadge(userId);
+        String role = prefs.getString("role", "User");
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -67,7 +71,19 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
             } else if (id == R.id.nav_cart) {
                 loadFragment(new CartFragment());
                 return true;
+            } else if (id == R.id.nav_chat) {
+            if ("Admin".equalsIgnoreCase(role)) {
+                loadFragment(new AdminChatFragment()); // 👈 admin dùng fragment khác
+            } else {
+                loadFragment(new ChatFragment());
+            }
+            return true;
+        }
+        else if (id == R.id.nav_notifications) {
+//                loadFragment(new ChatFragment());
+                return true;
             } else if (id == R.id.nav_profile) {
+                loadFragment(new UserDetailFragment());
                 return true;
             }
             return false;
