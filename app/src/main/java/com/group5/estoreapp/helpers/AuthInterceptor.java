@@ -2,6 +2,7 @@ package com.group5.estoreapp.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -26,9 +27,19 @@ public class AuthInterceptor implements Interceptor {
 
         if (token != null) {
             builder.header("Authorization", "Bearer " + token);
+
+            // ✅ Log token ra Logcat
+            Log.d("AuthInterceptor", "Using token: " + token);
+        } else {
+            Log.w("AuthInterceptor", "No accessToken found in SharedPreferences");
         }
 
         Request request = builder.build();
+
+        // ✅ Log request info
+        Log.d("AuthInterceptor", "Request URL: " + request.url());
+        Log.d("AuthInterceptor", "Request Headers: " + request.headers());
+
         return chain.proceed(request);
     }
 }

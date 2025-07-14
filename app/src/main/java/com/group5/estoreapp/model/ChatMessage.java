@@ -1,24 +1,27 @@
 package com.group5.estoreapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ChatMessage {
-    private int id;
+    private String id;
     private int chatHubId;
     private int senderId;
     private String senderName;
-    private String message;
+    private String content;
+    @SerializedName("createdTime")
     private String sentAt;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(int chatHubId, int senderId, String message) {
+    public ChatMessage(int chatHubId, int senderId, String content) {
         this.chatHubId = chatHubId;
         this.senderId = senderId;
-        this.message = message;
+        this.content = content;
     }
 
     // Getter
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -34,8 +37,8 @@ public class ChatMessage {
         return senderName;
     }
 
-    public String getMessage() {
-        return message;
+    public String getContent() {
+        return content;
     }
 
     public String getSentAt() {
@@ -43,7 +46,7 @@ public class ChatMessage {
     }
 
     // Setter
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -59,8 +62,8 @@ public class ChatMessage {
         this.senderName = senderName;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void setSentAt(String sentAt) {
