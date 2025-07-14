@@ -1,4 +1,5 @@
 package com.group5.estoreapp.activities;
+import android.util.Log;
 
 import android.Manifest;
 import android.content.Intent;
@@ -159,16 +160,15 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
     }
 
     private void findNearestStore() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Chưa có quyền
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
             return;
         }
+
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, location -> {
                     if (location != null) {
@@ -197,12 +197,22 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
                                         startActivity(intent);
 
                                     } catch (Exception e) {
-                                        Toast.makeText(this, "Lỗi xử lý phản hồi", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, "Lỗi xử lý phản hồi từ máy chủ", Toast.LENGTH_SHORT).show();
                                         e.printStackTrace();
                                     }
                                 },
                                 error -> {
-                                    Toast.makeText(this, "Không gọi được API", Toast.LENGTH_SHORT).show();
+                                    if (error.networkResponse != null) {
+                                        int statusCode = error.networkResponse.statusCode;
+                                        if (statusCode == 404) {
+                                            Toast.makeText(this, "Không tìm thấy cửa hàng gần bạn.", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(this, "Lỗi máy chủ: " + statusCode, Toast.LENGTH_SHORT).show();
+                                        }
+                                        Log.e("STORE_API", "Status Code: " + statusCode);
+                                    } else {
+                                        Toast.makeText(this, "Lỗi kết nối đến máy chủ.", Toast.LENGTH_SHORT).show();
+                                    }
                                     error.printStackTrace();
                                 }
                         );
@@ -211,6 +221,10 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
                     } else {
                         Toast.makeText(this, "Không thể lấy vị trí hiện tại", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Không thể lấy vị trí. Hãy bật GPS.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 });
     }
 

@@ -31,10 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <!-- Thêm vào AndroidManifest.xml trong thẻ <application> -->
-
-        <activity
-            android:name=".activities.OrderHistoryActivity"/>
         <activity android:name=".activities.ProductDetailActivity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.OrderDetailActivity" />
@@ -61,7 +57,7 @@
         <!-- ✅ Thêm MapActivity nếu dùng OpenStreetMap -->
         <activity
             android:name=".activities.MapActivity"
-            android:exported="false" />
+            android:exported="true" />
 
     </application>
 </manifest>
