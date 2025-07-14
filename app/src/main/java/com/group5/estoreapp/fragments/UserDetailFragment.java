@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.group5.estoreapp.R;
 import com.group5.estoreapp.activities.EditProfileActivity;
 import com.group5.estoreapp.activities.LoginActivity;
+import com.group5.estoreapp.activities.OrderHistoryActivity;
 import com.group5.estoreapp.api.userApi.UserApiService;
 import com.group5.estoreapp.helpers.SessionManager;
 import com.group5.estoreapp.model.User;
@@ -45,6 +46,7 @@ public class UserDetailFragment extends Fragment {
     private TextView textAddress;
     private LinearLayout layoutChangePassword;
     private LinearLayout layoutLogout;
+    private LinearLayout layoutViewOrders; // ✅ Layout cho xem lịch sử đơn hàng
 
     private int currentUserId;
     private User currentUser;
@@ -95,6 +97,7 @@ public class UserDetailFragment extends Fragment {
         // Actions
         layoutChangePassword = view.findViewById(R.id.layoutChangePassword);
         layoutLogout = view.findViewById(R.id.layoutLogout);
+        layoutViewOrders = view.findViewById(R.id.layoutViewOrders); // ✅ Khởi tạo layout xem lịch sử đơn hàng
     }
 
     private void setupClickListeners() {
@@ -133,10 +136,27 @@ public class UserDetailFragment extends Fragment {
             // startActivity(intent);
         });
 
+        // ✅ Click listener cho xem lịch sử đơn hàng
+        layoutViewOrders.setOnClickListener(v -> {
+            navigateToOrderHistory();
+        });
+
         // Click listener cho logout
         layoutLogout.setOnClickListener(v -> {
             showLogoutConfirmDialog();
         });
+    }
+
+    // ✅ Method để chuyển đến OrderHistoryActivity
+    private void navigateToOrderHistory() {
+        if (currentUserId == -1) {
+            Toast.makeText(getContext(), "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Chuyển đến OrderHistoryActivity
+        Intent intent = new Intent(getContext(), OrderHistoryActivity.class);
+        startActivity(intent);
     }
 
     private void loadUserData() {

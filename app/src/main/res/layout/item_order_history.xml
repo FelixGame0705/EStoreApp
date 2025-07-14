@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header Row: Order ID and Date -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/textOrderId"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Đơn hàng #12345"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#333333" />
+
+            <TextView
+                android:id="@+id/textOrderDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15/07/2025 14:30"
+                android:textSize="12sp"
+                android:textColor="#666666" />
+
+        </LinearLayout>
+
+        <!-- Status and Total Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/textOrderStatus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Đang xử lý"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_blue_dark"
+                android:background="@drawable/category_background"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp" />
+
+            <TextView
+                android:id="@+id/textOrderTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="500,000 VNĐ"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#E91E63"
+                android:layout_marginStart="12dp" />
+
+        </LinearLayout>
+
+        <!-- Payment Method -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thanh toán: "
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/textPaymentMethod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VNPay"
+                android:textSize="14sp"
+                android:textColor="#333333"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Shipping Address -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giao đến: "
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/textShippingAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="123 ABC Street, District 1, Ho Chi Minh City"
+                android:textSize="14sp"
+                android:textColor="#333333"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

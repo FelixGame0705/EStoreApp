@@ -24,22 +24,40 @@
 
         <!-- ✅ MainActivity: Launcher -->
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".activities.ProductDetailActivity" />
+        <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".activities.OrderDetailActivity" />
+        <activity android:name=".activities.EditProfileActivity"/>
+        <activity android:name=".activities.MainActivity"/>
+        <activity android:name=".activities.PaymentResultActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Deep link URL: estoreapp://payment-return -->
+                <data
+                    android:scheme="estoreapp"
+                    android:host="payment-return" />
+
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.WebViewActivity" />
+
 
         <!-- ✅ Thêm MapActivity nếu dùng OpenStreetMap -->
         <activity
             android:name=".activities.MapActivity"
             android:exported="true" />
-
-        <!-- Các activity còn lại -->
-        <activity android:name=".activities.ProductDetailActivity" android:exported="true"/>
-        <activity android:name=".activities.RegisterActivity" android:exported="true"/>
 
     </application>
 </manifest>
