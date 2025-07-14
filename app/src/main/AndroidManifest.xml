@@ -31,6 +31,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Thêm vào AndroidManifest.xml trong thẻ <application> -->
+
+        <activity
+            android:name=".activities.OrderHistoryActivity"/>
         <activity android:name=".activities.ProductDetailActivity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.OrderDetailActivity" />

@@ -1,5 +1,7 @@
 package com.group5.estoreapp.model;
 
+import com.google.type.DateTime;
+
 import java.util.Date;
 
 public class Order {
@@ -9,7 +11,7 @@ public class Order {
     private String paymentMethod;
     private String billingAddress;
     private String orderStatus;
-    private Date orderDate;
+    private String orderDate;
     private double totalAmount;
 
 //    private User user;
@@ -34,8 +36,8 @@ public class Order {
     public String getOrderStatus() { return orderStatus; }
     public void setOrderStatus(String orderStatus) { this.orderStatus = orderStatus; }
 
-    public Date getOrderDate() { return orderDate; }
-    public void setOrderDate(Date orderDate) { this.orderDate = orderDate; }
+    public String getOrderDate() { return orderDate; }
+    public void setOrderDate(String orderDate) { this.orderDate = orderDate; }
 
     public double getTotalAmount() { return totalAmount; }
     public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
