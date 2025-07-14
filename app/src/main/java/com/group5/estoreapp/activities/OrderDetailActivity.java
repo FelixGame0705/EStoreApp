@@ -101,8 +101,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         PaymentRequest paymentRequest = new PaymentRequest(
                 orderId,
                 "VNPay",
-                "estoreapp://payment-return",  // returnUrl
-                "estoreapp://payment-return",  // cancelUrl
+                "https://prmbe.felixtien.dev/api/Payments/callback/vnpay",  // returnUrl
+                "",  // cancelUrl
                 "VN"
         );
 
@@ -113,6 +113,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                 public void onSuccess(String paymentUrl) {
                     Intent intent = new Intent(OrderDetailActivity.this, WebViewActivity.class);
                     intent.putExtra("url", paymentUrl);
+                    intent.putExtra("orderId", orderId);
                     startActivity(intent);
                 }
 
