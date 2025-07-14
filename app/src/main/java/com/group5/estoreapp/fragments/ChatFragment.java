@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.group5.estoreapp.R;
 import com.group5.estoreapp.adapter.ChatAdapter;
+import com.group5.estoreapp.helpers.SignalRManager;
 import com.group5.estoreapp.model.ApiResponse;
 import com.group5.estoreapp.model.ChatHub;
 import com.group5.estoreapp.model.ChatMessage;
@@ -151,6 +152,7 @@ public class ChatFragment extends Fragment {
                         chatAdapter.setMessages(messages);
                         recyclerView.scrollToPosition(messages.size() - 1);
                     }
+                    connectToSignalR(hubId);
                 } else {
                     Toast.makeText(getContext(), "Không thể tải tin nhắn", Toast.LENGTH_SHORT).show();
                 }
@@ -166,6 +168,7 @@ public class ChatFragment extends Fragment {
     private void sendMessage() {
         String message = inputMessage.getText().toString().trim();
         if (message.isEmpty() || chatHubId == null) return;
+        SignalRManager.getInstance().sendMessage(chatHubId, message, userId);
 
         chatService.sendMessage(chatHubId, message, 0, new Callback<ResponseBody>() {
             @Override
@@ -184,4 +187,40 @@ public class ChatFragment extends Fragment {
             }
         });
     }
+    private void connectToSignalR(String hubId) {
+        SignalRManager.getInstance().startConnection(
+                "https://prmbe.felixtien.dev/chatHub", // Địa chỉ hub
+                userId,
+                new SignalRManager.MessageListener() {
+                    @Override
+                    public void onNewMessage(int senderId, String message) {
+                        requireActivity().runOnUiThread(() -> {
+                            ChatMessage chatMessage = new ChatMessage();
+                            chatMessage.setSenderId(senderId);
+                            chatMessage.setContent(message);
+
+                            chatAdapter.addMessage(chatMessage);
+                            recyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
+                        });
+                    }
+
+                    @Override
+                    public void onSystemMessage(String message) {
+                        Log.d(TAG, "System: " + message);
+                    }
+                },
+                new SignalRManager.ConnectionListener() {
+                    @Override
+                    public void onConnected() {
+                        SignalRManager.getInstance().joinGroup(hubId, role); // Admin/User
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.e(TAG, "SignalR error: " + t.getMessage());
+                    }
+                }
+        );
+    }
+
 }
