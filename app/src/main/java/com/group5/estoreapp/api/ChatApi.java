@@ -1,6 +1,8 @@
 package com.group5.estoreapp.api;
 
-import com.group5.estoreapp.helpers.OkHttpProvider;
+import android.content.Context;
+
+import com.group5.estoreapp.helpers.AuthInterceptor;
 import com.group5.estoreapp.model.ApiResponse;
 import com.group5.estoreapp.model.ChatHub;
 import com.group5.estoreapp.model.ChatHubRequest;
@@ -8,6 +10,8 @@ import com.group5.estoreapp.model.ChatMessageRequest;
 
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -19,6 +23,7 @@ import retrofit2.http.Query;
 
 public class ChatApi {
     private static final String BASE_URL = "https://prmbe.felixtien.dev/api/";
+    private static ChatApi instance;
 
     public interface API {
 
@@ -27,28 +32,37 @@ public class ChatApi {
 
 
         @GET("chat/hub/{id}")
-        Call<ApiResponse<ChatHub>> getChatHubById(@Path("id") int id);
+        Call<ChatHub> getChatHubById(@Path("id") String chatHubId);
 
-        @GET("chat/hubs/user/{id}")
-        Call<ApiResponse<List<ChatHub>>> getChatHubsByUser(@Path("id") int userId);
+        @GET("chat/hubs/user/{userId}")
+        Call<List<ChatHub>> getChatHubsByUser(@Path("userId") int userId);
 
         @POST("chat/message")
-        Call<ApiResponse<Void>> sendMessage(@Body ChatMessageRequest request);
+        Call<ResponseBody> sendMessage(@Body ChatMessageRequest request);
+
+
     }
 
     public final API api;
 
-    private ChatApi(String token) {
+    private ChatApi(Context context) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new AuthInterceptor(context)) // ✅ dùng interceptor
+                .build();
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .client(OkHttpProvider.getClientWithToken(token)) // 👈 đính kèm header
+                .baseUrl(BASE_URL) // 👈 sửa lại URL của bạn
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
 
         api = retrofit.create(API.class);
     }
 
-    public static ChatApi getInstance(String token) {
-        return new ChatApi(token);
+    public static ChatApi getInstance(Context context) {
+        if (instance == null) {
+            instance = new ChatApi(context);
+        }
+        return instance;
     }
 }

@@ -3,50 +3,41 @@ package com.group5.estoreapp.model;
 import java.util.List;
 
 public class ChatHub {
-    private int id;
-    private int userId;
-    private int storeId; // nếu không dùng thì có thể bỏ
-    private List<ChatMessage> messages;
+    private String id; // 👈 UUID dạng String
+    private String status;
+    private String createdTime;
+    private String updatedTime;
+    private int fUserId;
+    private int sUserId;
+    private List<ChatMessage> chatMessages;
 
-    public ChatHub() {
-    }
-
-    public ChatHub(int id, int userId, int storeId, List<ChatMessage> messages) {
-        this.id = id;
-        this.userId = userId;
-        this.storeId = storeId;
-        this.messages = messages;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getStatus() {
+        return status;
     }
 
-    public int getStoreId() {
-        return storeId;
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public String getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public int getFUserId() {
+        return fUserId;
+    }
+
+    public int getSUserId() {
+        return sUserId;
     }
 
     public List<ChatMessage> getMessages() {
-        return messages;
+        return chatMessages;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public void setStoreId(int storeId) {
-        this.storeId = storeId;
-    }
-
-    public void setMessages(List<ChatMessage> messages) {
-        this.messages = messages;
-    }
+    // Setters...
 }
