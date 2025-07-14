@@ -45,6 +45,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (product != null) {
             tvName.setText(product.getProductName());
             tvPrice.setText(String.format("%,.0f đ", product.getPrice()));
+            tvDescription.setText(product.getFullDescription());
+            tvSpecs.setText(product.getTechnicalSpecifications());
             Glide.with(this)
                     .load(product.getImageURL())
                     .into(imgDetail);
