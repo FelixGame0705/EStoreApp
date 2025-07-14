@@ -24,7 +24,7 @@
 
         <!-- ✅ MainActivity: Launcher -->
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -35,11 +35,11 @@
         <!-- ✅ Thêm MapActivity nếu dùng OpenStreetMap -->
         <activity
             android:name=".activities.MapActivity"
-            android:exported="false" />
+            android:exported="true" />
 
         <!-- Các activity còn lại -->
-        <activity android:name=".activities.ProductDetailActivity" android:exported="false"/>
-        <activity android:name=".activities.RegisterActivity" android:exported="false"/>
-
+        <activity android:name=".activities.ProductDetailActivity"/>
+        <activity android:name=".activities.RegisterActivity"/>
+        <activity android:name=".activities.MainActivity" />
     </application>
 </manifest>
