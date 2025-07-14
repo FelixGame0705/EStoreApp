@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.car.ui.lib)
     implementation(libs.play.services.location)
     implementation(libs.protolite.well.known.types)
+    implementation(libs.swiperefreshlayout)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     // Gson for JSON parsing

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <View
+        android:id="@+id/readIndicator"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/circle_blue_bg"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thông báo"
+            android:textColor="@color/gray_light"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/textTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="2 giờ trước"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>
