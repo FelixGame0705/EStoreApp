@@ -29,6 +29,20 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        SharedPreferences authPref = getSharedPreferences("auth", MODE_PRIVATE);
+        SharedPreferences rememberPref = getSharedPreferences("remember", MODE_PRIVATE);
+
+        String token = authPref.getString("accessToken", null);
+        boolean rememberMe = rememberPref.getBoolean("rememberMe", false);
+
+        if (token != null && !token.isEmpty() && rememberMe) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_login);
 
         etEmail = findViewById(R.id.etEmail);
@@ -36,6 +50,15 @@ public class LoginActivity extends AppCompatActivity {
         cbRemember = findViewById(R.id.cbRemember);
         btnLogin = findViewById(R.id.btnLogin);
         tvRegister = findViewById(R.id.tvRegister);
+
+
+        // ✅ Load thông tin nếu ghi nhớ trước đó
+        if (rememberMe) {
+            etEmail.setText(rememberPref.getString("username", ""));
+            etPassword.setText(rememberPref.getString("password", ""));
+            cbRemember.setChecked(true);
+        }
+
 
         btnLogin.setText("Login");
 
@@ -64,24 +87,48 @@ public class LoginActivity extends AppCompatActivity {
                     String accessToken = tokenObj.get("accessToken").getAsString();
                     String role = tokenObj.get("role").getAsString();
 
-
-
                     // ✅ Giải mã JWT để lấy userId
                     int userId = extractUserIdFromToken(accessToken);
 
-                    // Lưu vào SharedPreferences
-                    SharedPreferences pref = getSharedPreferences("auth", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putString("accessToken", accessToken);
-                    editor.putInt("userId", userId);
-                    editor.putString("role", role);
-                    Log.d("LoginActivity", "AccessToken: " + accessToken);
-                    if (cbRemember.isChecked()) {
-                        editor.putString("username", etEmail.getText().toString().trim());
-                        editor.putString("password", etPassword.getText().toString().trim());
-                    }
 
-                    editor.apply();
+//                    // Lưu vào SharedPreferences
+//                    SharedPreferences pref = getSharedPreferences("auth", MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = pref.edit();
+//                    editor.putString("accessToken", accessToken);
+//                    editor.putInt("userId", userId);
+//                    editor.putString("role", role);
+//                    Log.d("LoginActivity", "AccessToken: " + accessToken);
+//                    if (cbRemember.isChecked()) {
+//                        editor.putString("username", etEmail.getText().toString().trim());
+//                        editor.putString("password", etPassword.getText().toString().trim());
+//                        editor.putBoolean("rememberMe", true);
+//                    }else {
+//                        // ✅ Nếu KHÔNG tick → xoá thông tin cũ
+//                        editor.remove("username");
+//                        editor.remove("password");
+//                        editor.putBoolean("rememberMe", false);
+//                    }
+//
+//                    editor.apply();
+// Lưu token
+                    SharedPreferences.Editor authEditor = authPref.edit();
+                    authEditor.putString("accessToken", accessToken);
+                    authEditor.putInt("userId", userId);
+                    authEditor.putString("role", role);
+                    authEditor.apply();
+
+                    // Ghi nhớ tài khoản nếu cần
+                    SharedPreferences.Editor rememberEditor = rememberPref.edit();
+                    if (cbRemember.isChecked()) {
+                        rememberEditor.putString("username", username);
+                        rememberEditor.putString("password", password);
+                        rememberEditor.putBoolean("rememberMe", true);
+                    } else {
+                        rememberEditor.clear();
+                    }
+                    rememberEditor.apply();
+
+
 
                     // Chuyển qua MainActivity
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
