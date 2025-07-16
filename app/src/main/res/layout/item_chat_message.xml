@@ -4,6 +4,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:textColor="#000"
+    android:textSize="16sp"
     android:padding="8dp"
-    android:layout_margin="4dp"
-    android:background="@drawable/bubblechat" />
+    android:layout_margin="8dp" />

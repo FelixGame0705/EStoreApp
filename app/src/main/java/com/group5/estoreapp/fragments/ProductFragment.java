@@ -25,6 +25,7 @@ import com.group5.estoreapp.adapter.ProductAdapter;
 import com.group5.estoreapp.model.Product;
 import com.group5.estoreapp.services.ProductService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -36,6 +37,7 @@ public class ProductFragment extends Fragment {
     private ViewFlipper viewFlipper;
     private ProductAdapter productAdapter;
     private List<Product> allProducts;
+    private List<Product> originalProductList;
 
     @Nullable
     @Override
@@ -45,7 +47,6 @@ public class ProductFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_product, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerView);
-//        searchView = view.findViewById(R.id.searchView);
         viewFlipper = view.findViewById(R.id.viewFlipper);
 
         setupViewFlipper();
@@ -55,6 +56,22 @@ public class ProductFragment extends Fragment {
 
         return view;
     }
+    public void onSearchQuery(String query) {
+        if (originalProductList == null) return;
+        if (query == null || query.trim().isEmpty()) {
+            productAdapter.setProductList(originalProductList); // hiện toàn bộ khi rỗng
+        } else {
+            String lowerQuery = query.toLowerCase();
+            List<Product> filteredList = new ArrayList<>();
+            for (Product p : originalProductList) {
+                if (p.getProductName().toLowerCase().contains(lowerQuery)) {
+                    filteredList.add(p);
+                }
+            }
+            productAdapter.setProductList(filteredList);
+        }
+    }
+
 
     private void setupMenu() {
         MenuHost menuHost = requireActivity();
@@ -95,6 +112,7 @@ public class ProductFragment extends Fragment {
             @Override
             public void onSuccess(List<Product> productList) {
                 allProducts = productList;
+                originalProductList = new ArrayList<>(productList);
                 productAdapter = new ProductAdapter(requireContext(), productList);
                 recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
                 recyclerView.setAdapter(productAdapter);

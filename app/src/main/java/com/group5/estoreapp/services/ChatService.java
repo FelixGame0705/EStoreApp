@@ -1,27 +1,39 @@
 package com.group5.estoreapp.services;
 
+import android.content.Context;
+
 import com.group5.estoreapp.api.ChatApi;
-import com.group5.estoreapp.model.ChatMessage;
+import com.group5.estoreapp.model.ApiResponse;
+import com.group5.estoreapp.model.ChatHub;
+import com.group5.estoreapp.model.ChatMessageRequest;
 
 import java.util.List;
 
-import retrofit2.Call;
+import okhttp3.ResponseBody;
 import retrofit2.Callback;
 
 public class ChatService {
-    private final ChatApi chatApi;
 
-    public ChatService() {
-        chatApi = ChatApi.getInstance();
+    private final ChatApi.API api;
+
+    public ChatService(Context context) {
+        this.api = ChatApi.getInstance(context).api; // ✅ dùng context
     }
 
-    public void sendMessage(ChatMessage message, Callback<Void> callback) {
-        Call<Void> call = chatApi.sendMessage(message);
-        call.enqueue(callback);
+    public void createChatHub(int secondUserId, Callback<ApiResponse<ChatHub>> callback) {
+        api.createChatHub(secondUserId).enqueue(callback);
     }
 
-    public void getChatHistory(Callback<List<ChatMessage>> callback) {
-        Call<List<ChatMessage>> call = chatApi.getChatHistory();
-        call.enqueue(callback);
+    public void getChatHubsByUser(int userId, Callback<List<ChatHub>> callback) {
+        api.getChatHubsByUser(userId).enqueue(callback);
+    }
+
+    public void getChatHubById(String chatHubId, Callback<ChatHub> callback) {
+        api.getChatHubById(chatHubId).enqueue(callback);
+    }
+
+    public void sendMessage(String chatHubId, String content, int type, Callback<ResponseBody> callback) {
+        ChatMessageRequest request = new ChatMessageRequest(chatHubId, content, type);
+        api.sendMessage(request).enqueue(callback);
     }
 }

@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,43 +13,72 @@ import com.group5.estoreapp.model.ChatMessage;
 
 import java.util.List;
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
-    private List<ChatMessage> messages;
+public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private final List<ChatMessage> messages;
+    private int currentUserId;
 
     public ChatAdapter(List<ChatMessage> messages) {
         this.messages = messages;
     }
 
     public void setMessages(List<ChatMessage> newMessages) {
-        messages = newMessages;
+        messages.clear();
+        messages.addAll(newMessages);
         notifyDataSetChanged();
+    }
+
+    public void setCurrentUserId(int id) {
+        this.currentUserId = id;
+    }
+
+    private static final int TYPE_SENT = 0;
+    private static final int TYPE_RECEIVED = 1;
+
+    @Override
+    public int getItemViewType(int position) {
+        ChatMessage message = messages.get(position);
+        return message.getSenderId() == currentUserId ? TYPE_SENT : TYPE_RECEIVED;
     }
 
     @NonNull
     @Override
-    public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_message, parent, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        int layoutId = viewType == TYPE_SENT
+                ? R.layout.item_message_sent
+                : R.layout.item_message_receive;
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
         return new ChatViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
-        ChatMessage msg = messages.get(position);
-        holder.textViewMessage.setText(msg.getMessage());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        ChatMessage message = messages.get(position);
+        ((ChatViewHolder) holder).bind(message.getContent()); // <-- fix tại đây
     }
 
     @Override
     public int getItemCount() {
         return messages.size();
     }
+    public void addMessage(ChatMessage message) {
+        messages.add(message);
+        notifyItemInserted(messages.size() - 1);
+    }
 
-    public static class ChatViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewMessage;
 
-        public ChatViewHolder(View itemView) {
+    static class ChatViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textMessage;
+
+        public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewMessage = itemView.findViewById(R.id.textMessage);
+            textMessage = itemView.findViewById(R.id.textMessage);
+        }
+
+        public void bind(String message) {
+            textMessage.setText(message);
         }
     }
-}
 
+}

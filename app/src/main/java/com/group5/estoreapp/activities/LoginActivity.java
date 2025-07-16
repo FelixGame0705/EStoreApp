@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.inputmethod.InputMethodManager;
+import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -68,6 +68,9 @@ public class LoginActivity extends AppCompatActivity {
                     String accessToken = tokenObj.get("accessToken").getAsString();
                     String role = tokenObj.get("role").getAsString();
 
+
+
+                    // ✅ Giải mã JWT để lấy userId
                     int userId = extractUserIdFromToken(accessToken);
 
                     // Lưu token vào SharedPreferences
@@ -76,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("accessToken", accessToken);
                     editor.putInt("userId", userId);
                     editor.putString("role", role);
-
+                    Log.d("LoginActivity", "AccessToken: " + accessToken);
                     if (cbRemember.isChecked()) {
                         editor.putString("username", username);
                         editor.putString("password", password);

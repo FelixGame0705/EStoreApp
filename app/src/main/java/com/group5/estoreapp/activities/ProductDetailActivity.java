@@ -16,10 +16,11 @@ import com.group5.estoreapp.services.CartService;
 public class ProductDetailActivity extends AppCompatActivity {
 
     private TextView tvName, tvPrice, tvDescription, tvSpecs;
-    private ImageView imgDetail, imgAdd;
+    private ImageView imgDetail, imgAdd, backButton;
     private int userId;
     private Product product;
     private CartService cartService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +38,15 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvPrice = findViewById(R.id.tvPriceDetail);
         tvDescription = findViewById(R.id.tvDescription);
         tvSpecs = findViewById(R.id.tvSpecs);
+        backButton = findViewById(R.id.backButton);
 
         // Nhận Product từ Intent
         product = (Product) getIntent().getSerializableExtra("product");
         if (product != null) {
             tvName.setText(product.getProductName());
-            tvPrice.setText(String.format("%,d đ", product.getPrice()));
+            tvPrice.setText(String.format("%,.0f đ", product.getPrice()));
+            tvDescription.setText(product.getFullDescription());
+            tvSpecs.setText(product.getTechnicalSpecifications());
             Glide.with(this)
                     .load(product.getImageURL())
                     .into(imgDetail);
@@ -69,6 +73,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                     }
                 });
             }
+
         });
+        backButton.setOnClickListener(v -> finish());
     }
 }

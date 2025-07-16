@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private List<CartItem> cartItems;
     private Button btnSubmit;
+    private ImageView backButton;
 
     private OrderService orderService;
     private int userId; // lấy từ SharedPreferences
@@ -40,9 +42,10 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewOrderItems);
         btnSubmit = findViewById(R.id.btnSubmitBilling);
+        backButton = findViewById(R.id.backButton);
 
         cartItems = (ArrayList<CartItem>) getIntent().getSerializableExtra("cartItems");
-        cartId = getIntent().getIntExtra("orderId", 0);
+        cartId = getIntent().getIntExtra("cartId", 0);
 
         SharedPreferences pref = getSharedPreferences("auth", MODE_PRIVATE);
         userId = pref.getInt("userId", -1);
@@ -56,6 +59,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         }
 
         btnSubmit.setOnClickListener(v -> handleSubmitOrder());
+        backButton.setOnClickListener(v -> finish());
     }
 
     private void handleSubmitOrder() {
@@ -64,51 +68,60 @@ public class OrderDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Tạo đơn hàng
+        if (cartId == 0 || userId == -1) {
+            Toast.makeText(this, "Thiếu thông tin giỏ hàng hoặc người dùng", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         OrderRequest orderRequest = new OrderRequest(
                 cartId,
                 userId,
-                "VNPay",       // Tạm set cố định
-                "123 ABC"      // Tạm set địa chỉ
+                "VNPay",        // phương thức thanh toán
+                "123 ABC"       // địa chỉ (sau này nên để người dùng nhập)
         );
 
         orderService.createOrder(orderRequest, new OrderService.CreateOrderCallback() {
             @Override
             public void onSuccess(int orderId) {
-                Toast.makeText(OrderDetailActivity.this, "Tạo đơn hàng thành công! ID: " + orderId, Toast.LENGTH_SHORT).show();
+                Toast.makeText(OrderDetailActivity.this, "Đơn hàng đã tạo! ID: " + orderId, Toast.LENGTH_SHORT).show();
 
-                // Gọi PaymentService để lấy link thanh toán
-                PaymentRequest paymentRequest = new PaymentRequest(
-                        orderId,
-                        "VNPay",
-                        "estoreapp://payment-return",  // ✅ returnUrl cho kết quả thành công
-                        "estoreapp://payment-return",  // ✅ cancelUrl dùng chung
-                        "VN"
-                );
-                new Handler().postDelayed(() -> {
-                PaymentService paymentService = new PaymentService();
-                paymentService.createPayment(paymentRequest, new PaymentService.PaymentCallback() {
-                    @Override
-                    public void onSuccess(String paymentUrl) {
-                        // Mở URL thanh toán trên trình duyệt
-                        Intent intent = new Intent(OrderDetailActivity.this, WebViewActivity.class);
-                        intent.putExtra("url", paymentUrl);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        Toast.makeText(OrderDetailActivity.this, "Lỗi tạo link thanh toán: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-                }, 1000);
+                // ✅ Sau khi có orderId thì gọi thanh toán
+                createPayment(orderId);
             }
-
 
             @Override
             public void onError(Throwable t) {
                 Toast.makeText(OrderDetailActivity.this, "Lỗi tạo đơn hàng: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
+    }
+
+    private void createPayment(int orderId) {
+        PaymentRequest paymentRequest = new PaymentRequest(
+                orderId,
+                "VNPay",
+                "https://prmbe.felixtien.dev/api/Payments/callback/vnpay",  // returnUrl
+                "",  // cancelUrl
+                "VN"
+        );
+
+        new Handler().postDelayed(() -> {
+            PaymentService paymentService = new PaymentService();
+            paymentService.createPayment(paymentRequest, new PaymentService.PaymentCallback() {
+                @Override
+                public void onSuccess(String paymentUrl) {
+                    Intent intent = new Intent(OrderDetailActivity.this, WebViewActivity.class);
+                    intent.putExtra("url", paymentUrl);
+                    intent.putExtra("orderId", orderId);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    Toast.makeText(OrderDetailActivity.this, "Lỗi tạo link thanh toán: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }, 1000); // Delay 1 giây để chắc chắn order đã commit xong server
     }
 }

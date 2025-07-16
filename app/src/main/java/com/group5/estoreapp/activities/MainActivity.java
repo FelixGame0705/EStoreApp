@@ -1,4 +1,5 @@
 package com.group5.estoreapp.activities;
+import android.util.Log;
 
 import android.Manifest;
 import android.content.Intent;
@@ -6,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,8 +26,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.group5.estoreapp.R;
+import com.group5.estoreapp.fragments.AdminChatFragment;
 import com.group5.estoreapp.fragments.CartFragment;
 import com.group5.estoreapp.fragments.ChatFragment;
+import com.group5.estoreapp.fragments.NotificationFragment;
 import com.group5.estoreapp.fragments.ProductFragment;
 import com.group5.estoreapp.fragments.UserDetailFragment;
 
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SearchView searchView = findViewById(R.id.searchView);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -55,8 +60,22 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
         SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
         userId = prefs.getInt("userId", -1);
         updateCartBadge(userId);
+        String role = prefs.getString("role", "User");
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                sendSearchQueryToProductFragment(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                sendSearchQueryToProductFragment(newText);
+                return true;
+            }
+        });
 
         loadFragment(new ProductFragment());
 
@@ -70,10 +89,16 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
                 loadFragment(new CartFragment());
                 return true;
             } else if (id == R.id.nav_chat) {
+            if ("Admin".equalsIgnoreCase(role)) {
+                loadFragment(new AdminChatFragment()); // 👈 admin dùng fragment khác
+            } else {
                 loadFragment(new ChatFragment());
-                return true;
-            } else if (id == R.id.nav_notifications) {
+            }
+            return true;
+        }
+        else if (id == R.id.nav_notifications) {
 //                loadFragment(new ChatFragment());
+                loadFragment(new NotificationFragment());
                 return true;
             } else if (id == R.id.nav_profile) {
                 loadFragment(new UserDetailFragment());
@@ -129,8 +154,23 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
         }
         return super.onOptionsItemSelected(item);
     }
+    private void sendSearchQueryToProductFragment(String query) {
+        Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (current instanceof ProductFragment) {
+            ((ProductFragment) current).onSearchQuery(query);
+        }
+    }
 
     private void findNearestStore() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Chưa có quyền
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+            return;
+        }
+
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, location -> {
                     if (location != null) {
@@ -159,12 +199,22 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
                                         startActivity(intent);
 
                                     } catch (Exception e) {
-                                        Toast.makeText(this, "Lỗi xử lý phản hồi", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, "Lỗi xử lý phản hồi từ máy chủ", Toast.LENGTH_SHORT).show();
                                         e.printStackTrace();
                                     }
                                 },
                                 error -> {
-                                    Toast.makeText(this, "Không gọi được API", Toast.LENGTH_SHORT).show();
+                                    if (error.networkResponse != null) {
+                                        int statusCode = error.networkResponse.statusCode;
+                                        if (statusCode == 404) {
+                                            Toast.makeText(this, "Không tìm thấy cửa hàng gần bạn.", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(this, "Lỗi máy chủ: " + statusCode, Toast.LENGTH_SHORT).show();
+                                        }
+                                        Log.e("STORE_API", "Status Code: " + statusCode);
+                                    } else {
+                                        Toast.makeText(this, "Lỗi kết nối đến máy chủ.", Toast.LENGTH_SHORT).show();
+                                    }
                                     error.printStackTrace();
                                 }
                         );
@@ -173,6 +223,10 @@ public class MainActivity extends AppCompatActivity implements CartFragment.Cart
                     } else {
                         Toast.makeText(this, "Không thể lấy vị trí hiện tại", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Không thể lấy vị trí. Hãy bật GPS.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 });
     }
 

@@ -47,6 +47,8 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.car.ui.lib)
     implementation(libs.play.services.location)
+    implementation(libs.protolite.well.known.types)
+    implementation(libs.swiperefreshlayout)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     // Gson for JSON parsing
@@ -55,6 +57,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation ("com.auth0.android:jwtdecode:2.0.1")
+    implementation ("com.microsoft.signalr:signalr:6.0.2")
+
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
